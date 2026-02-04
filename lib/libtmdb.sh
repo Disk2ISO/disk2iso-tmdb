@@ -130,14 +130,14 @@ get_coverpath_tmdb() {
 # .........  initialisieren bevor das Modul verwendet wird
 # ===========================================================================
 load_api_config_tmdb() {
-    # Lese API-Konfiguration mit config_get_value_ini() aus libsettings.sh
+    # Lese API-Konfiguration mit settings_get_value_ini() aus libsettings.sh
     local base_url image_base_url user_agent timeout language
     
-    base_url=$(config_get_value_ini "tmdb" "api" "base_url" "https://api.themoviedb.org/3")
-    image_base_url=$(config_get_value_ini "tmdb" "api" "image_base_url" "https://image.tmdb.org/t/p/w500")
-    user_agent=$(config_get_value_ini "tmdb" "api" "user_agent" "disk2iso/1.2.0")
-    timeout=$(config_get_value_ini "tmdb" "api" "timeout" "10")
-    language=$(config_get_value_ini "tmdb" "api" "language" "de-DE")
+    base_url=$(settings_get_value_ini "tmdb" "api" "base_url" "https://api.themoviedb.org/3")
+    image_base_url=$(settings_get_value_ini "tmdb" "api" "image_base_url" "https://image.tmdb.org/t/p/w500")
+    user_agent=$(settings_get_value_ini "tmdb" "api" "user_agent" "disk2iso/1.2.0")
+    timeout=$(settings_get_value_ini "tmdb" "api" "timeout" "10")
+    language=$(settings_get_value_ini "tmdb" "api" "language" "de-DE")
     
     # Setze globale Variablen
     TMDB_API_BASE_URL="$base_url"
