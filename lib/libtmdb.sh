@@ -125,12 +125,12 @@ get_coverpath_tmdb() {
 # Rückgabe.: 0 = Erfolgreich geladen
 # Setzt....: TMDB_API_BASE_URL, TMDB_IMAGE_BASE_URL, TMDB_USER_AGENT,
 # .........  TMDB_TIMEOUT, TMDB_LANGUAGE (global)
-# Nutzt....: config_get_value_ini() aus libconfig.sh
+# Nutzt....: config_get_value_ini() aus libsettings.sh
 # Hinweis..: Wird von tmdb_check_dependencies() aufgerufen, um Werte zu
 # .........  initialisieren bevor das Modul verwendet wird
 # ===========================================================================
 load_api_config_tmdb() {
-    # Lese API-Konfiguration mit config_get_value_ini() aus libconfig.sh
+    # Lese API-Konfiguration mit config_get_value_ini() aus libsettings.sh
     local base_url image_base_url user_agent timeout language
     
     base_url=$(config_get_value_ini "tmdb" "api" "base_url" "https://api.themoviedb.org/3")

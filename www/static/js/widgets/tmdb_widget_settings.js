@@ -1,64 +1,104 @@
 /**
- * disk2iso - TMDB Widget Settings
- * Dynamisches Laden und Verwalten der TMDB-Einstellungen
- * Auto-Save bei Fokus-Verlust (moderne UX)
+ * disk2iso - TMDB Settings Widget
+ * Lädt TMDB Einstellungen dynamisch
  */
 
-(function() {
-    'use strict';
+let tmdbSaveTimeout = null;
 
-    /**
-     * Lädt das TMDB Settings Widget vom Backend
-     */
-    async function loadTmdbSettingsWidget() {
-        try {
-            const response = await fetch('/api/widgets/tmdb/settings');
-            if (!response.ok) throw new Error('Failed to load TMDB settings widget');
-            return await response.text();
-        } catch (error) {
-            console.error('Error loading TMDB settings widget:', error);
-            return `<div class="error">Fehler beim Laden der TMDB-Einstellungen: ${error.message}</div>`;
+document.addEventListener('DOMContentLoaded', function() {
+    // Lade Widget-Content via AJAX
+    fetch('/api/widgets/tmdb/settings')
+        .then(response => response.text())
+        .then(html => {
+            const container = document.getElementById('tmdb-settings-container');
+            if (container) {
+                container.innerHTML = html;
+                initTmdbSettingsWidget();
+            }
+        })
+        .catch(error => console.error('Fehler beim Laden der TMDB Settings:', error));
+});
+
+function initTmdbSettingsWidget() {
+    const activeCheckbox = document.getElementById('tmdb_active');
+    const cacheCheckbox = document.getElementById('tmdb_cache_enabled');
+    const settingsDiv = document.getElementById('tmdb-settings');
+    const cacheSettingsDiv = document.getElementById('tmdb-cache-settings');
+    
+    if (activeCheckbox) {
+        activeCheckbox.addEventListener('change', function() {
+            if (settingsDiv) {
+                settingsDiv.style.display = this.checked ? 'block' : 'none';
+            }
+            saveTmdbSettings();
+        });
+    }
+    
+    if (cacheCheckbox) {
+        cacheCheckbox.addEventListener('change', function() {
+            if (cacheSettingsDiv) {
+                cacheSettingsDiv.style.display = this.checked ? 'block' : 'none';
+            }
+            saveTmdbSettings();
+        });
+    }
+    
+    // Auto-save bei Änderungen (blur = beim Verlassen des Feldes)
+    const apiKeyInput = document.getElementById('tmdb_api_key');
+    const cacheDurationInput = document.getElementById('tmdb_cache_duration');
+    
+    if (apiKeyInput) {
+        apiKeyInput.addEventListener('blur', saveTmdbSettings);
+    }
+    
+    if (cacheDurationInput) {
+        cacheDurationInput.addEventListener('blur', saveTmdbSettings);
+        // Bei Number-Inputs auch bei Enter/Change
+        cacheDurationInput.addEventListener('change', saveTmdbSettings);
+    }
+}
+
+function saveTmdbSettings() {
+    // Debounce: Warte 500ms nach letzter Änderung
+    if (tmdbSaveTimeout) {
+        clearTimeout(tmdbSaveTimeout);
+    }
+    
+    tmdbSaveTimeout = setTimeout(() => {
+        saveTmdbSettingsNow();
+    }, 500);
+}
+
+function saveTmdbSettingsNow() {
+    const active = document.getElementById('tmdb_active')?.checked || false;
+    const cacheEnabled = document.getElementById('tmdb_cache_enabled')?.checked || false;
+    const cacheDuration = parseInt(document.getElementById('tmdb_cache_duration')?.value) || 30;
+    const apiKey = document.getElementById('tmdb_api_key')?.value || '';
+    
+    const data = {
+        active: active,
+        cache_enabled: cacheEnabled,
+        cache_duration_days: cacheDuration,
+        api_key: apiKey
+    };
+    
+    fetch('/api/widgets/tmdb/settings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showNotification('TMDB Einstellungen gespeichert', 'success');
+        } else {
+            showNotification('Fehler beim Speichern: ' + result.error, 'error');
         }
-    }
-
-    /**
-     * Injiziert das TMDB Settings Widget in die Settings-Seite
-     */
-    async function injectTmdbSettingsWidget() {
-        const targetContainer = document.querySelector('#tmdb-settings-container');
-        if (!targetContainer) {
-            console.warn('TMDB settings container not found');
-            return;
-        }
-
-        const widgetHtml = await loadTmdbSettingsWidget();
-        targetContainer.innerHTML = widgetHtml;
-        
-        // Event Listener registrieren
-        setupEventListeners();
-    }
-
-    /**
-     * Registriert alle Event Listener für das TMDB Settings Widget
-     */
-    function setupEventListeners() {
-        // TMDB API Key - Auto-Save bei Blur
-        const tmdbApiKeyField = document.getElementById('tmdb_api_key');
-        if (tmdbApiKeyField) {
-            tmdbApiKeyField.addEventListener('blur', function() {
-                // Nutzt die zentrale handleFieldChange Funktion aus settings.js
-                if (window.handleFieldChange) {
-                    window.handleFieldChange({ target: tmdbApiKeyField });
-                }
-            });
-        }
-    }
-
-    // Auto-Injection beim Laden der Settings-Seite
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectTmdbSettingsWidget);
-    } else {
-        injectTmdbSettingsWidget();
-    }
-
-})();
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        showNotification('Fehler beim Speichern der Einstellungen', 'error');
+    });
+}
