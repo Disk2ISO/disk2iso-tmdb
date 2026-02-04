@@ -1,0 +1,17 @@
+<!-- TMDB Widget Settings -->
+<!-- Dynamisch geladen via tmdb_widget_settings.js -->
+<div class="form-section" id="tmdb-widget-settings">
+    <h2>
+        <img src="{{ url_for('static', filename='img/control.svg') }}" alt="" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;">
+        TMDB API (DVD/Blu-ray Metadaten)
+    </h2>
+    
+    <div class="form-group">
+        <label for="tmdb_api_key">TMDB API-Key</label>
+        <input type="text" id="tmdb_api_key" name="tmdb_api_key" value="{{ config.tmdb_api_key }}" placeholder="1234567890abcdef1234567890abcdef" maxlength="32">
+        <div class="help-text">
+            API-Key von themoviedb.org für automatische Film-Metadaten und Cover. 
+            <a href="/help#tmdb-api" target="_blank" style="color: #667eea;">Anleitung zur Beschaffung →</a>
+        </div>
+    </div>
+</div>
