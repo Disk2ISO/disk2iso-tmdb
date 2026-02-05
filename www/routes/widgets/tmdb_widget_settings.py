@@ -23,7 +23,7 @@ def get_tmdb_settings():
     try:
         ini_path = get_tmdb_ini_path()
         
-        config = {
+        settings = {
             "enabled": True,
             "active": True,
             "cache_enabled": True,
@@ -36,13 +36,13 @@ def get_tmdb_settings():
             parser.read(ini_path)
             
             if parser.has_section('settings'):
-                config['enabled'] = parser.getboolean('settings', 'enabled', fallback=True)
-                config['active'] = parser.getboolean('settings', 'active', fallback=True)
-                config['cache_enabled'] = parser.getboolean('settings', 'cache_enabled', fallback=True)
-                config['cache_duration_days'] = parser.getint('settings', 'cache_duration_days', fallback=30)
-                config['api_key'] = parser.get('settings', 'api_key', fallback='')
+                settings['enabled'] = parser.getboolean('settings', 'enabled', fallback=True)
+                settings['active'] = parser.getboolean('settings', 'active', fallback=True)
+                settings['cache_enabled'] = parser.getboolean('settings', 'cache_enabled', fallback=True)
+                settings['cache_duration_days'] = parser.getint('settings', 'cache_duration_days', fallback=30)
+                settings['api_key'] = parser.get('settings', 'api_key', fallback='')
         
-        return config
+        return settings
         
     except Exception as e:
         print(f"Fehler beim Lesen der TMDB-Einstellungen: {e}", file=sys.stderr)
@@ -97,7 +97,7 @@ def api_tmdb_settings_widget():
     config = get_tmdb_settings()
     
     return render_template('widgets/tmdb_widget_settings.html',
-                         config=config,
+                         settings=settings,
                          t=t)
 
 @tmdb_settings_bp.route('/api/widgets/tmdb/settings', methods=['POST'])
@@ -116,3 +116,4 @@ def api_save_tmdb_settings():
             
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
