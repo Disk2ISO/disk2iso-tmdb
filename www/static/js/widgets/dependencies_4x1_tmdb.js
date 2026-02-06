@@ -1,11 +1,11 @@
 /**
- * TMDB Module - Dependencies Widget (4x1)
+ * Dependencies Widget (4x1) - TMDB
  * Zeigt TMDB spezifische Tools (Python-Module)
  * Version: 1.0.0
  */
 
 function loadTmdbDependencies() {
-    fetch('/api/system')
+    fetch('/api/widgets/tmdb/dependencies')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.software) {

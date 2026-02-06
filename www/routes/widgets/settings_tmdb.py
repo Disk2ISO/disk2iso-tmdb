@@ -96,8 +96,8 @@ def api_tmdb_settings_widget():
     """
     config = get_tmdb_settings()
     
-    return render_template('widgets/tmdb_widget_settings.html',
-                         settings=settings,
+    return render_template('widgets/settings_4x1_tmdb.html',
+                         settings=config,
                          t=t)
 
 @tmdb_settings_bp.route('/api/widgets/tmdb/settings', methods=['POST'])

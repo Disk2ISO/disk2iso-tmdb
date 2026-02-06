@@ -1,5 +1,5 @@
 /**
- * disk2iso - TMDB Settings Widget
+ * disk2iso - Settings Widget (4x1) - TMDB
  * Lädt TMDB Einstellungen dynamisch
  */
 
