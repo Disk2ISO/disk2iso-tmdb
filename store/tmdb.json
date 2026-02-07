@@ -1,0 +1,66 @@
+{
+  "id": "tmdb",
+  "name": "TMDB Provider",
+  "category": "providers",
+  "description": "Metadata-Provider für DVD/Blu-ray via The Movie Database API v3",
+  "icon": "https://raw.githubusercontent.com/Disk2ISO/disk2iso-tmdb/main/store/icon.svg",
+  "author": "Disk2ISO Team",
+  "homepage": "https://github.com/Disk2ISO/disk2iso-tmdb",
+  "repository": "https://github.com/Disk2ISO/disk2iso-tmdb",
+  "license": "MIT",
+  "requires": {
+    "disk2iso": ">=1.3.0",
+    "metadata": ">=1.3.0"
+  },
+  "current_version": "1.3.0",
+  "versions": [
+    {
+      "version": "1.3.0",
+      "released": "2026-02-07",
+      "changelog": "Kompatibilität mit disk2iso 1.3.0 Service-Struktur",
+      "download_url": "https://github.com/Disk2ISO/disk2iso-tmdb/releases/download/v1.3.0/tmdb-module.zip",
+      "checksum_url": "https://github.com/Disk2ISO/disk2iso-tmdb/releases/download/v1.3.0/tmdb-module.zip.sha256",
+      "size": "TBD"
+    },
+    {
+      "version": "1.2.0",
+      "released": "2026-02-04",
+      "changelog": "Initiales Release als Provider-Modul",
+      "download_url": "https://github.com/Disk2ISO/disk2iso-tmdb/releases/download/v1.2.0/tmdb-module.zip",
+      "checksum_url": "https://github.com/Disk2ISO/disk2iso-tmdb/releases/download/v1.2.0/tmdb-module.zip.sha256",
+      "size": "TBD"
+    }
+  ],
+  "install_method": "unzip",
+  "install_path": "/opt/disk2iso/",
+  "post_install": [
+    "sudo systemctl restart disk2iso-web"
+  ],
+  "provider_type": "video",
+  "api_endpoint": "https://api.themoviedb.org/3/",
+  "requires_api_key": true,
+  "rate_limit": "40 requests/10 seconds",
+  "features": [
+    "Titel-basierte Suche",
+    "Film und Serien Metadaten",
+    "Cover-Art und Poster Download",
+    "Cast und Crew Informationen",
+    "Release-Daten und Ratings",
+    "Multi-Language Support"
+  ],
+  "dependencies": {
+    "system": [
+      "curl",
+      "jq"
+    ]
+  },
+  "planned_features": [
+    "TMDB API v4 Support",
+    "TV-Serien Staffel/Episode Details",
+    "Multi-Language Poster-Downloads",
+    "Genre und Jahr-Filter"
+  ],
+  "setup_required": {
+    "api_key": "TMDB API Key von https://www.themoviedb.org/settings/api erforderlich"
+  }
+}
